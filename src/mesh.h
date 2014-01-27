@@ -14,19 +14,16 @@
 #ifndef MESH
 #define MESH
 
-#include <mpi.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <mpi.h>
 
 #include "field.h"
-
-
-/*__________________________________________________________________________________________________
- * Permutations
- */
-void printPrmt( size_t* p, const size_t n );
-bool nextPrmt( size_t* p, int* sign, const size_t n );
+#include "permut.h"
 
 
 /*__________________________________________________________________________________________________
@@ -34,23 +31,27 @@ bool nextPrmt( size_t* p, int* sign, const size_t n );
  */
 typedef struct point {
 	real* x;
-	struct simplex** simplex;
+	uintptr_t nfaces;
+	uintptr_t* faces; // simplexes containing the point
 } point;
 
 void pointAllocate( point* p, const size_t dim );
 void pointFree( point* p );
 real sqrdistance( point* p, point* q, const size_t dim );
+real distance( point* p, point* q, const size_t dim );
 // void point_MPI_Send( point* m, const size_t dim, int dest, int tag );
 // void point_MPI_Recv( point* m, const size_t dim, int src, int tag, MPI_Status* stat );
 
 
 /*__________________________________________________________________________________________________
  * Face structure for mesh
- */
+ */l
 typedef struct face {
-	struct point** points;
-	struct simplex* lsimplex;
-	struct simplex* rsimplex;
+	uintptr_t* points;
+	uintptr_t* lsimplex;
+	uintptr_t* rsimplex;
+	uintptr_t nfaces;
+	uintptr_t* faces;
 } face;
 
 void faceAllocate( face* fc, const size_t dim );
@@ -63,29 +64,105 @@ void faceFree( face* fc );
  * Simplex structure for mesh
  */
 typedef struct simplex {
-	point* point;
-	struct face** face;	
+	uintptr_t* faces;
 } simplex;
 
 void simplexAllocate( simplex* s, const size_t dim );
 void simplexFree( simplex* s );
-real orient( simplex* s, const size_t dim );
-real inball( simplex* smp, point* pnt, const size_t dim );
+real orient( simplex* s, const size_t dim ); // check orientation of the simplex
+real inball( simplex* smp, point* pnt, const size_t dim ); // check if point is in bla
 // void refine( simplex* s, )
 // void simplex_MPI_Send( simplex* m, int dest, int tag );
 // void simplex_MPI_Recv( simplex* m, int src, int tag, MPI_Status* stat );
 
+/*__________________________________________________________________________________________________
+ */
+typedef struct pointrecord {
+	point p;
+	pointrecord* pn;
+	pointrecord* pp;
+} pointdrecord;
+
+typedef struct pointlist {
+	size_t size;
+	struct pointrecord* first;
+	struct pointrecord* last;
+} pointlist;
+
+void pointlistAllocate( pointlist* pl ) {
+	if ( !pl ) {
+		pl = ( pointlist* ) malloc( sizeof( pointlist ) );
+	}
+	pl->size = 0;
+	pl->first = NULL;
+	pl->last = NULL;
+}
+
+void pointlistFree( pointlist* pl ) {
+	if ( pl ) {
+		free( pl );
+	}
+}
+
+void push( pointlist* pl, point* p, const size_t dim ) {
+	
+	if ( pl ) {
+		pointrecord* pr = ( pointrecord* ) malloc( sizeof( pointrecord ) );
+		pointAllocate( &pr->p, dim );
+		memcpy( pr->p.x, p->x, sizeof( real ) * dim );
+		memcpy( pr->p.faces, p->faces, sizeof( uintptr_t ) * p->nfaces );
+		pr->p.nfaces = p->nfaces;
+		
+		if ( pl->size == 0 ) {
+			pl->first = pr;
+			pl->last = pr;
+			pr->pn = NULL;
+			pr->pp = NULL;
+		} else {
+			pl->last->pn = pr->pp;
+			pr->pp = pl->last;
+			pr->pn = NULL;
+			pl->last = ( pointrecord* ) malloc( sizeof( pointrecord ) );
+			pl->last = pr;
+		}
+		pl->size++;
+	}
+}
+
+void pop( pointlist* pl, const size_t i ) {
+	if ( i < pl->size - 1 )  {
+		if ( i == 0 ) {
+			pl->first->pn->pp = NULL;
+			free( pl->first );
+			pl->size--;
+		} else if ( i == pl->size - 1 ) {
+			pl->last->pp->pn = NULL;
+			free( pl->last );
+			pl->size--;
+		} else {
+			size_t k;
+			pointrecord* pr =pl->first;
+			for ( k = 1; k <= i; k++ ) {
+				pr = pr->pn;
+			}
+			pr->pp->pn = pr->pn;
+			pr->pn->pp = pr->pp;
+			free( pr );
+		}
+	}
+}
 
 /*__________________________________________________________________________________________________
  * Mesh structure
  */
 typedef struct mesh {
 	size_t dim;
-	size_t deep;
-	size_t nchilds;
-	struct simplex* cell;
-	struct mesh* parent;
-	struct mesh** childs;
+	size_t npoints;
+	size_t nfaces;
+	size_t ncells;
+	struct pointlist points;
+	struct face* faces;
+	struct simplex* cells;
 } mesh;
 
 void meshAllocate( mesh* m, const size_t dim );

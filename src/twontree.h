@@ -52,15 +52,10 @@ twontree* twonTreeAllocate( const real* range[2], const size_t dim = 3,
 							const size_t capacity = 1, const real ratio = 0.000001 );
 
 void twonTreeFree( twontree* twnt );
-
 bool insert( twontree* twnt, const real* x, const size_t dim );
-
 bool contains( twontree* twnt, const real* x, const size_t dim );
-
 real area( twontree* twnt );
-
 bool subdivide( twontree* twnt );
-
 void insertPoint( real** X, real* x, const size_t dim );
 
 #endif // TWONTREE
