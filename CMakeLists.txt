@@ -93,7 +93,7 @@ if( CMAKE_BUILD_TYPE MATCHES Debug )
   add_definitions( -DpolynomeDEBUG=1 )
 endif( CMAKE_BUILD_TYPE MATCHES Debug )
 
-#add_definitions( -std=c++11 )
+add_definitions( -std=c++11 )
 
 #___________________________________________________________________________________________________
 # Include Subdirectories

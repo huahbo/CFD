@@ -40,7 +40,7 @@ template< typename Field = float >
 Field orient( const Cell& x );
 
 template< typename Field = float >
-Field inball( const Cell& x, const Point< Field >& x );
+Field inball( const Cell& c, const Point< Field >& x );
 
 /*__________________________________________________________________________________________________
  *		External operations

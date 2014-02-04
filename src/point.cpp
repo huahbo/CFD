@@ -15,7 +15,7 @@ ________________________________________________________________________________
 
 
 template< typename Field >
-Point< Field >::Point( const size_t dim = 3 ) :
+Point< Field >::Point( const size_t& dim ) :
     vector< Field >(),
     _faces() {
 }
@@ -36,13 +36,12 @@ size_t Point< Field >::dim() const {
 }
 
 template< typename Field >
-list< Field >& Point::faces() {
+list< Field >& Point< Field >::faces() {
 	return _faces;
 }
 
-
 template< typename Field >
-Point< Field >& operator+= ( const Point< Field >& x ) {
+Point< Field >& Point< Field >::operator+= ( const Point< Field >& x ) {
 	for ( size_t i = 0; i < this->size(); i++ ) {
 		this->assign( i, this->at[i] + x[i] );
 	}
@@ -50,7 +49,7 @@ Point< Field >& operator+= ( const Point< Field >& x ) {
 }
 
 template< typename Field >
-Point< Field >& operator-= ( const Point< Field >& x ) {
+Point< Field >& Point< Field >::operator-= ( const Point< Field >& x ) {
 	for ( size_t i = 0; i < this->size(); i++ ) {
 		this->assign( i, this->at[i] - x[i] );
 	}
@@ -58,15 +57,15 @@ Point< Field >& operator-= ( const Point< Field >& x ) {
 }
 
 template< typename Field >
-Point< Field >& operator*= ( const Field& a ) {
+Point< Field >& Point< Field >::operator*= ( const Field& a ) {
 	for ( size_t i = 0; i < this->size(); i++ ) {
-		this->assign( i, a * x[i] );
+		this->assign( i, a * (*this)[i] );
 	}
 	return *this;
 }
 
 template< typename Field >
-ostream& Point< Field >::operator<< ( ostream& out, Point< Field >& x ) {
+ostream& operator<< ( ostream& out, Point< Field >& x ) {
 	out << x[0];
 	for ( size_t i = 1; i < x.size(); i++ ) {
 		out << " " << x[i];
@@ -123,7 +122,7 @@ inline Field distance( const Point< Field >& x, const Point< Field >& y ) {
 
 template< typename Field = float >
 inline Point< Field > proj( const Point< Field >& x, const Point< Field >& y ) {
-	Point< Field > proj();
+	Point< Field > proj;
 	Field scalar = scalar( x, y );
 	Field normy = norm( y, y );
 

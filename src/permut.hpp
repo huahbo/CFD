@@ -16,12 +16,22 @@ ________________________________________________________________________________
 
 #include <cstdbool>
 #include <cstdlib>
+#include <ostream>
+#include <vector>
+
+using namespace std;
 
 /*__________________________________________________________________________________________________
- * Generate Permutations
+ *		Generate Permutations
  */
-void printPrmt( size_t* p, const size_t n );
-bool nextPrmt( size_t* p, int* sign, const size_t n );
+class Permut : public vector< size_t > {
+public:
+	Permut( const size_t n );
+	~Permut();
+	
+	bool next( int sign );
+};
 
+ostream& operator<< ( ostream& out, Permut& p );
 
 #endif // PERMUT

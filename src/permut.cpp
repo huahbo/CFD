@@ -14,18 +14,21 @@ ________________________________________________________________________________
 #include "permut.hpp"
 
 
-/*__________________________________________________________________________________________________
- */
-void printPrmt( size_t* p, const size_t n ) {
-	size_t i;
-	for ( i = 0; i < n; i++ ) {
-		printf( "%ld", p[i] );
+Permut::Permut( const size_t n ) :
+	vector< size_t >( n ) {
+}
+
+Permut::~Permut() {
+}
+
+ostream& operator<<( ostream& out, Permut& p ) {
+	for ( size_t i = 0; i < p.size(); i++ ) {
+		out << p[i];
 	}
 }
 
 // Ives algorithm
-bool nextPrmt( size_t* p, int* sign, const size_t n ) {
-	
+bool Permut::next( int sign ) {	
 	size_t a;
 	static int sgn;
 	static size_t i;
@@ -33,45 +36,45 @@ bool nextPrmt( size_t* p, int* sign, const size_t n ) {
 	static bool first = true;
 	
 	if ( first ) {
-		c = ( size_t* ) malloc( n * sizeof( size_t ) );
-		for ( i = 0; i < n; i++ ) {
+		c = new size_t[ this->size() ];
+		for ( i = 0; i < this->size(); i++ ) {
 			c[i] = i;
-			p[i] = i;
+			(*this)[i] = i;
 		}
 		sgn = 1;
-		*sign = sgn;
+		sign = sgn;
 		first = false;
 		return true;
 	} else {
 		i = 0;
 		jump:
-		if( i < n-1-i ) {
-			if ( c[i] < n-1-i ) {
-				a = p[c[i]];
-				p[c[i]] = p[c[i]+1];
-				p[c[i]+1] = a;
+		if( i < this->size()-1-i ) {
+			if ( c[i] < this->size()-1-i ) {
+				a = (*this)[c[i]];
+				(*this)[c[i]] = (*this)[c[i]+1];
+				(*this)[c[i]+1] = a;
 				c[i]++;
 				i = 0;
 				sgn *= -1.0; 
-				*sign = sgn;
+				sign = sgn;
 				return true;
 			} else {
-				a = p[i];
-				p[i] = p[n-1-i];
-				p[n-1-i] = a;
+				a = (*this)[i];
+				(*this)[i] = (*this)[ this->size()-1-i ];
+				(*this)[ this->size()-1-i] = a;
 				c[i] = i;
-				if ( p[n-1-i] == n-1-i  ) {
+				if ( (*this)[this->size()-1-i] == this->size()-1-i  ) {
 					i++;
 					goto jump;
 				} else {
 					i = 0;
 					sgn *= -1.0;
-					*sign = sgn;
+					sign = sgn;
 					return true;
 				}
 			}
 		} else {
-			free(c);
+			delete[] c;
 			return false;
 		}
 	}

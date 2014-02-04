@@ -17,6 +17,7 @@ ________________________________________________________________________________
 #include <cstdint>
 #include <cmath>
 #include <list>
+#include <ostream>
 #include <vector>
 
 using namespace std;
@@ -38,9 +39,6 @@ public:
 	Point< Field >& operator-= ( const Point< Field >& x );
 	Point< Field >& operator*= ( const Field& a );
 
-	friend ostream& operator<< ( ostream& out, Point< Field >& x );
-// 	friend istream& operator>> ( istream& in, Point< Field >& x );
-
 public:
 	list< uintptr_t > _faces;
 };
@@ -48,6 +46,13 @@ public:
 /*__________________________________________________________________________________________________
  *		External operations
  */
+
+template< typename Field = float >
+ostream& operator<< ( ostream& out, Point< Field >& x );
+
+// template< typename Field = float >
+// istream& operator>> ( istream& in, Point< Field >& x );
+
 template< typename Field = float >
 inline Field scalar( const Point< Field >& x, const Point< Field >& y );
 

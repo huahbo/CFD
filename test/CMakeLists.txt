@@ -22,7 +22,7 @@ set( MPI_TEST_SRCS
 )
 
 set( PERM_TEST_SRCS
-	permut.c
+	prmtst.cpp
 )
 
 set( SIMP_TEST_SRCS

@@ -14,18 +14,17 @@
 #___________________________________________________________________________________________________
 # Files
 set( CFD_SRCS
-	function.c
-	grid.c
-	permut.c
-	twontree.c
+	cell.cpp
+	face.hpp
+	permut.cpp
 	)
 
 set( CFD_HDRS
-	field.h
-	function.h
-	grid.h
-	twontree.c
-	permut.h
+	cell.hpp
+	face.hpp
+	mesh.hpp
+	permut.hpp
+	point.hpp
 	)
 
 #___________________________________________________________________________________________________
@@ -39,7 +38,7 @@ include_directories(
 
 #___________________________________________________________________________________________________
 # Adding cfd library
-add_library( cfd MODULE 
+add_library( cfd MODULE
   ${CFD_SRCS}
   ${CFD_HDRS}
   )

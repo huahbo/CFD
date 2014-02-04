@@ -31,10 +31,10 @@ public:
 	~Face();
 
 	size_t dim() const;
-	list< Field >& faces();
+	list< uintptr_t >& faces();
 
 // 	friend ostream& operator<< ( ostream& out, Face& x );
-// 	friend istream& operator>> ( istream& in, Point< Field >& x );
+// 	friend istream& operator>> ( istream& in, Face& x );
 
 public:
 	uintptr_t _lcell;
