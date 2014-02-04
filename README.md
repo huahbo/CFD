@@ -1,4 +1,4 @@
 CFD
 ===
 
-Computational Fluid Dynamics project
+Unstrutured mesh library based on Delaunay triangulation
