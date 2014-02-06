@@ -17,13 +17,15 @@ ________________________________________________________________________________
 template< typename Field >
 Point< Field >::Point( const size_t& dim ) :
     vector< Field >(),
-    _faces() {
+    _faces(),
+    _cells() {
 }
 
 template< typename Field >
 Point< Field >::Point( const Field& val, const size_t& dim ) :
     vector< Field >( dim, val ),
-    _faces() {
+    _faces(),
+    _cells() {
 }
 
 template< typename Field >
@@ -118,6 +120,15 @@ inline Field distance( const Point< Field >& x, const Point< Field >& y ) {
 		dist += ( x[i] - y[i] ) * ( x[i] - y[i] );
 	}
 	return sqrt( dist );
+}
+
+template< typename Field = float >
+inline Field sqrdistance( const Point< Field >& x, const Point< Field >& y ) {
+	Field dist;
+	for ( size_t i = 0; i < x.size(); i++ ) {
+		dist += ( x[i] - y[i] ) * ( x[i] - y[i] );
+	}
+	return dist;
 }
 
 template< typename Field = float >

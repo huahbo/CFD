@@ -14,10 +14,8 @@
 #___________________________________________________________________________________________________
 # Files
 set( CFD_SRCS
-	cell.cpp
-	face.hpp
 	permut.cpp
-	)
+)
 
 set( CFD_HDRS
 	cell.hpp
@@ -25,7 +23,7 @@ set( CFD_HDRS
 	mesh.hpp
 	permut.hpp
 	point.hpp
-	)
+)
 
 #___________________________________________________________________________________________________
 # Build
@@ -34,14 +32,14 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${MPI_INCLUDE_PATH}
   .
-  )
+)
 
 #___________________________________________________________________________________________________
 # Adding cfd library
 add_library( cfd MODULE
   ${CFD_SRCS}
   ${CFD_HDRS}
-  )
+)
   
 target_link_libraries( cfd ${MPI_LIBRARIES} )
 

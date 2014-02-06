@@ -25,8 +25,7 @@
 /*__________________________________________________________________________________________________
  * Two N Tree structure
  */
-typedef struct {
-public:
+typedef struct twontree {
 	int _deep;
 	const real _ratio;
 	const size_t _capacity;
@@ -38,8 +37,8 @@ public:
 	real* _range[2];
 	real** _points;
 	
-	twontree* _parent;
-	twontree** _childs;
+	struct twontree* _parent;
+	struct twontree** _childs;
 
 } twontree;
 

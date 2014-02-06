@@ -11,24 +11,74 @@
 ____________________________________________________________________________________________________
 */
 
+#include <vector>
+
 #include "cell.hpp"
+#include "permut.hpp"
 
 
-Cell::Cell( const size_t& dim ) :
+template < typename Field >
+Cell< Field >::Cell( const size_t& dim ) :
 	list( dim ) {
 }
 
-Cell::~Cell() {
-
+template < typename Field >
+Cell< Field >::~Cell() {
 }
 
 template< typename Field >
-Field orient( const Cell& x ) {
+Field Cell< Field >::orient() {
+	size_t i, n;
+	int sgn;
+	n = this->_point->size();
+	Permut p( n );
+	Field orient, minor;
+	
+	orient = Field( 0.0 );
+	minor = Field( 1.0 );
+	while ( p.next( sgn ) ) {
+		for ( i = 0; i < n; i++ ) { 
+			minor =  minor * ( (*(*this)[0])[i][p[i]] - (*this->_point)[p[i]] );
+		}
+		orient += sgn * minor;
+		minor = 1.0;
+	}
+	return( orient );
 }
 
 template< typename Field >
-Field inball( const Cell& c, const Point< Field >& x ) {
+Field Cell< Field >::inball( const Point< Field >& x ) {
+	size_t i, n;
+	int sgn;
+	Field inball, minor;
+	
+	n = this->_point->size();
+	Permut p( n + 1 );
+	vector< Field > lft( n + 1 );
+	
 
+	lft[n] = sqrdistance< Field >( *this->_point, x );
+	for ( i = 0; i < n; i++ ) {
+		lft[i] = sqrdistance< Field >( (*(*this)[0])[i], x );
+	}
+	
+	inball = 0.0;
+	minor = 1.0;
+	while ( p.next( sgn ) ) {
+		for ( i = 0; i <= n; i++ ) {
+			if ( p[i] < n && i < n ) {
+				minor = minor * ( (*(*this)[0])[i][p[i]] - x[p[i]] );
+			} else if ( p[i] < n && i == n) {
+				minor = minor * ( (*this->_point)[p[i]] - x[p[i]] );
+			} else {
+				minor = minor * lft[i];
+			}
+		}
+		inball += sgn * minor;
+		minor = 1.0;
+	}
+
+	return inball;
 }
 
 

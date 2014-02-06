@@ -14,18 +14,22 @@ ________________________________________________________________________________
 #include "face.hpp"
 
 
-Face::Face( const size_t& dim ) : 
-	list< uintptr_t >( dim ) {
+template < typename Field >
+Face< Field >::Face( const size_t& dim ) : 
+	list< Point< Field >* >( dim ) {
 }
 
-Face::~Face() {
+template < typename Field >
+Face< Field >::~Face() {
 }
 
-size_t Face::dim() const {
+template < typename Field >
+size_t Face< Field >::dim() const {
 	return this->size();
 }
 
-list< uintptr_t >& Face::faces() {
+template < typename Field >
+list< Face< Field >* >& Face< Field >::faces() {
 	return _faces;
 }
 

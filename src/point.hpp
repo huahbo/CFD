@@ -20,7 +20,11 @@ ________________________________________________________________________________
 #include <ostream>
 #include <vector>
 
+#include "face.hpp"
+#include "cell.hpp"
+
 using namespace std;
+
 
 /*__________________________________________________________________________________________________
  *		Point class
@@ -40,13 +44,13 @@ public:
 	Point< Field >& operator*= ( const Field& a );
 
 public:
-	list< uintptr_t > _faces;
+	list< Face< Field >* > _faces;
+	list< Cell< Field >* > _cells;
 };
 
 /*__________________________________________________________________________________________________
  *		External operations
  */
-
 template< typename Field = float >
 ostream& operator<< ( ostream& out, Point< Field >& x );
 
@@ -64,6 +68,9 @@ inline Field sum( const Point< Field >& x );
 
 template< typename Field = float >
 inline Field distance( const Point< Field >& x, const Point< Field >& y );
+
+template< typename Field = float >
+inline Field sqrdistance( const Point< Field >& x, const Point< Field >& y );
 
 template< typename Field = float >
 inline Point< Field > proj( const Point< Field >& x, const Point< Field >& y );

@@ -19,32 +19,42 @@ ________________________________________________________________________________
 #include <list>
 
 #include "cell.hpp"
+#include "point.hpp"
 
 using namespace std;
 
 /*__________________________________________________________________________________________________
  *		Face class
  */
-class Face : public list< uintptr_t > {
+template < typename Field = float >
+class Face : public list< Point< Field >* > {
 public:
 	Face( const size_t& dim = 3 );
 	~Face();
 
 	size_t dim() const;
-	list< uintptr_t >& faces();
-
-// 	friend ostream& operator<< ( ostream& out, Face& x );
-// 	friend istream& operator>> ( istream& in, Face& x );
+	list< Face< Field >* >& faces();
 
 public:
-	uintptr_t _lcell;
-	uintptr_t _rcell;
-	list< uintptr_t > _faces;
+	Cell< Field >* _lcell;
+	Cell< Field >* _rcell;
+	list< Face< Field >* > _faces;
 };
+
+// template < typename Field = float >
+// ostream& operator<< ( ostream& out, Face< Field >& x );
+// template < typename Field = float >
+// istream& operator>> ( istream& in, Face< Field >& x );
+
 
 /*__________________________________________________________________________________________________
  *		External operations
  */
+
+/*__________________________________________________________________________________________________
+ *		Include for template compilation
+ */
+#include "face.cpp"
 
 
 #endif // FACE

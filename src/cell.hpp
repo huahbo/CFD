@@ -17,7 +17,6 @@ ________________________________________________________________________________
 #include <cstdint>
 #include <cmath>
 #include <list>
-#include <vector>
 
 #include "face.hpp"
 #include "point.hpp"
@@ -27,24 +26,32 @@ using namespace std;
 /*__________________________________________________________________________________________________
  *		Cell class
  */
-class Cell : public list< uintptr_t > {
+template < typename Field = float >
+class Cell : public list< Face< Field >* > {
 public:
 	Cell( const size_t& dim = 3 );
 	~Cell();
-
-// 	friend ostream& operator<< ( ostream& out, Cell& x );
-// 	friend istream& operator>> ( istream& in, Cell& x );
+	Field orient();
+// 	Field reorient();
+	Field inball( const Point< Field >& x );
+	Point< Field >* _point;
 };
 
-template< typename Field = float >
-Field orient( const Cell& x );
+// template < typename Field = float >
+// ostream& operator<< ( ostream& out, Cell< Field >& x );
 
-template< typename Field = float >
-Field inball( const Cell& c, const Point< Field >& x );
+// template < typename Field = float >
+// istream& operator>> ( istream& in, Cell< Field >& x );
+
 
 /*__________________________________________________________________________________________________
  *		External operations
  */
+
+/*__________________________________________________________________________________________________
+ *		Include for template compilation
+ */
+#include "cell.cpp"
 
 
 #endif // CELL
