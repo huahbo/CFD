@@ -1,4 +1,4 @@
 CFD
 ===
 
-Adaptive mesh generatio for CFD
+Adaptive mesh generation for CFD
