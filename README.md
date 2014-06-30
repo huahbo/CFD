@@ -1,4 +1,4 @@
 CFD
 ===
 
-Unstrutured mesh library based on Delaunay triangulation
+Adaptive mesh generatio for CFD
